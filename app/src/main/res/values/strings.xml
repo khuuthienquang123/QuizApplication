@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Quiz Application</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="add_category">Add Category</string>
+    <string name="add_quiz">Add Quiz</string>
+</resources>
