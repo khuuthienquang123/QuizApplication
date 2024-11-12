@@ -33,40 +33,43 @@ public class LoginActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.login_button);
         auth = FirebaseAuth.getInstance();
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+        loginButton.setOnClickListener(v -> {
+            String email = emailEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
 
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    auth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(LoginActivity.this, task -> {
-                                if (task.isSuccessful()) {
-                                    FirebaseUser user = auth.getCurrentUser();
-                                    if (user != null) {
-                                        AccountManagement accountManagement = new AccountManagement();
-                                        if (accountManagement.isAdmin(user)) {
-                                            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
-                                            startActivity(intent);
-                                            finish();
-                                        } else {
-                                            Intent intent = new Intent(LoginActivity.this, UserActivity.class);
-                                            startActivity(intent);
-                                            finish();
-                                        }
+            if (!email.isEmpty() && !password.isEmpty()) {
+                auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(LoginActivity.this, task -> {
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = auth.getCurrentUser();
+                                if (user != null) {
+                                    AccountManagement accountManagement = new AccountManagement();
+                                    if (accountManagement.isAdmin(user)) {
+                                        Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                                        startActivity(intent);
+                                        finish();
                                     } else {
-                                        Log.e(TAG, "User is null after successful login");
+                                        Intent intent = new Intent(LoginActivity.this, UserActivity.class);
+                                        startActivity(intent);
+                                        finish();
                                     }
                                 } else {
-                                    Log.e(TAG, "Authentication failed", task.getException());
-                                    Toast.makeText(LoginActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                                    Log.e(TAG, "User is null after successful login");
                                 }
-                            });
-                } else {
-                    Toast.makeText(LoginActivity.this, "Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
-                }
+                            } else {
+                                Log.e(TAG, "Authentication failed", task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            } else {
+                Toast.makeText(LoginActivity.this, "Email and Password cannot be empty", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        Button signupButton = findViewById(R.id.signup_button);
+        signupButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+            startActivity(intent);
         });
     }
 }

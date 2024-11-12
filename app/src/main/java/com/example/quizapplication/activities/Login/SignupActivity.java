@@ -32,37 +32,34 @@ public class SignupActivity extends AppCompatActivity {
         Button signupButton = findViewById(R.id.signup_button);
         accountManagement = new AccountManagement();
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-                String passwordValidation = passwordValidationEditText.getText().toString();
+        signupButton.setOnClickListener(v -> {
+            String email = emailEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
+            String passwordValidation = passwordValidationEditText.getText().toString();
 
-                if(!password.equals(passwordValidation)){
-                    Toast.makeText(SignupActivity.this, "Password and password validation do not match.", Toast.LENGTH_SHORT).show();
-                    return;
+            if(!password.equals(passwordValidation)){
+                Toast.makeText(SignupActivity.this, "Password and password validation do not match.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            accountManagement.signUp(email, password, new AccountManagement.SignUpCallback() {
+                @Override
+                public void onSignUpSuccess(FirebaseUser user) {
+                    Toast.makeText(SignupActivity.this, "Sign up successful.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SignupActivity.this, UserActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
 
-                accountManagement.signUp(email, password, new AccountManagement.SignUpCallback() {
-                    @Override
-                    public void onSignUpSuccess(FirebaseUser user) {
-                        Toast.makeText(SignupActivity.this, "Sign up successful.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SignupActivity.this, UserActivity.class);
-                        startActivity(intent);
-                        finish();
+                @Override
+                public void onSignUpFailure(Exception e) {
+                    if (e instanceof FirebaseAuthException) {
+                        Toast.makeText(SignupActivity.this, "Sign up failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SignupActivity.this, "Network error. Please try again.", Toast.LENGTH_SHORT).show();
                     }
-
-                    @Override
-                    public void onSignUpFailure(Exception e) {
-                        if (e instanceof FirebaseAuthException) {
-                            Toast.makeText(SignupActivity.this, "Sign up failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(SignupActivity.this, "Network error. Please try again.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
+                }
+            });
         });
     }
 }
