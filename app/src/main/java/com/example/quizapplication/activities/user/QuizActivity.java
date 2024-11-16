@@ -68,6 +68,7 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void loadQuestion() {
         Quiz quiz = quizzes.get(currentQuizIndex);
         questionText.setText(quiz.getQuestion());
@@ -86,19 +87,40 @@ public class QuizActivity extends AppCompatActivity {
             Log.d(TAG, "Answer 2: " + answers.get(1).getText());
             Log.d(TAG, "Answer 3: " + answers.get(2).getText());
             Log.d(TAG, "Answer 4: " + answers.get(3).getText());
-        }
 
-        startTimer();
+            option1.setOnClickListener(v -> {
+                evaluateAnswer(0);
+                startNextQuestionTimer();
+            });
+
+            option2.setOnClickListener(v -> {
+                evaluateAnswer(1);
+                startNextQuestionTimer();
+            });
+
+            option3.setOnClickListener(v -> {
+                evaluateAnswer(2);
+                startNextQuestionTimer();
+            });
+
+            option4.setOnClickListener(v -> {
+                evaluateAnswer(3);
+                startNextQuestionTimer();
+            });
+
+        } else {
+            questionText.setText("Not enough answers for this question");
+            Log.e("QuizActivity", "Not enough answers for this question");
+        }
     }
 
-    private void startTimer() {
-        new CountDownTimer(15000, 1000) {
+    private void startQuestionTimer() {
+        questionTimer = new CountDownTimer(15000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timer.setText(String.valueOf(millisUntilFinished / 1000));
             }
 
-            @SuppressLint("SetTextI18n")
             @Override
             public void onFinish() {
                 timer.setText("0");
@@ -113,28 +135,59 @@ public class QuizActivity extends AppCompatActivity {
                 option2.setEnabled(false);
                 option3.setEnabled(false);
                 option4.setEnabled(false);
-
-                new CountDownTimer(5000, 1000) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        timer.setText("Next question in: " + millisUntilFinished / 1000);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        currentQuizIndex++;
-                        if (currentQuizIndex < quizzes.size()) {
-                            loadQuestion();
-                        } else {
-                            Intent intent = new Intent(QuizActivity.this, CongratulationActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-                }.start();
+                startNextQuestionTimer();
             }
         }.start();
     }
+
+    private void evaluateAnswer(int answerIndex) {
+        if (questionTimer != null) {
+            questionTimer.cancel();
+        }
+
+        if (answers.get(answerIndex).isCorrect()) {
+            questionText.setText("Correct answer!");
+
+        } else {
+            questionText.setText("Wrong answer.");
+            for (Answer answer : answers) {
+                if (answer.isCorrect()) {
+                    questionText.append("\nCorrect answer: " + answer.getText());
+                    break;
+                }
+            }
+        }
+        option1.setEnabled(false);
+        option2.setEnabled(false);
+        option3.setEnabled(false);
+        option4.setEnabled(false);
+
+        startNextQuestionTimer();
+    }
+
+    private void startNextQuestionTimer() {
+        questionTimer = new CountDownTimer(5000, 1000) {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timer.setText("Next question in: " + millisUntilFinished / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                currentQuizIndex++;
+                if (currentQuizIndex < quizzes.size()) {
+                    loadQuestion();
+                } else {
+                    Intent intent = new Intent(QuizActivity.this, CongratulationActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+        }.start();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

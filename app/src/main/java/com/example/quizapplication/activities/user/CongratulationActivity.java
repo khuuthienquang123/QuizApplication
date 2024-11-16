@@ -16,7 +16,7 @@ public class CongratulationActivity extends AppCompatActivity {
 
         Button exitButton = findViewById(R.id.exit_button);
         exitButton.setOnClickListener(v -> {
-            Intent intent = new Intent(CongratulationActivity.this, CategoriesAdapter.class);
+            Intent intent = new Intent(CongratulationActivity.this, UserActivity.class);
             startActivity(intent);
             finish();
         });

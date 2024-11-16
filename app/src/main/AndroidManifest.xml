@@ -33,6 +33,7 @@
         <activity android:name=".activities.admin.AdminManagementActivityAnswers" />
         <activity android:name=".activities.admin.AdminAddAnswerActivity" />
 
+        <activity android:name=".activities.user.StartActivity"/>
         <activity android:name=".activities.user.UserActivity" />
         <activity android:name=".activities.user.WaitingActivity" />
         <activity android:name=".activities.user.QuizActivity" />

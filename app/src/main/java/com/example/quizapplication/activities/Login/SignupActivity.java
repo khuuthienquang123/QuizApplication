@@ -46,7 +46,7 @@ public class SignupActivity extends AppCompatActivity {
                 @Override
                 public void onSignUpSuccess(FirebaseUser user) {
                     Toast.makeText(SignupActivity.this, "Sign up successful.", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SignupActivity.this, UserActivity.class);
+                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
                 }

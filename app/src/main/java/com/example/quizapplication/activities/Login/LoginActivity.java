@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.quizapplication.R;
 import com.example.quizapplication.activities.account_management.AccountManagement;
 import com.example.quizapplication.activities.admin.AdminActivity;
+import com.example.quizapplication.activities.user.StartActivity;
 import com.example.quizapplication.activities.user.UserActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +29,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+
+        ImageView background = findViewById(R.id.imageView);
+        background.setImageResource(R.drawable.background);
+
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
@@ -49,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                     } else {
-                                        Intent intent = new Intent(LoginActivity.this, UserActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, StartActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
